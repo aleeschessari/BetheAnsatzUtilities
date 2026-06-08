@@ -1,3 +1,41 @@
+module Heisenberg_XXX
+
+export
+    # Array/initialization functions
+    create_available_array,
+    get_ground_state,
+    range_I,
+    
+    # Energy/momentum calculation
+    get_energy_triplet,
+    get_momentum_index_triplet,
+    energy,
+    
+    # Iterative solver
+    iterative_procedure,
+    
+    # Utility functions
+    phi,
+    d,
+    
+    # Kernel and matrix functions
+    K_function,
+    kappa_function,
+    K_matrix,
+    L_cursive,
+    log_L_cursive,
+    kappa_cursive,
+    log_kappa_cursive,
+    G_function,
+    
+    # H matrices
+    H_matrix,
+    H_matrix_simplified_minus,
+    H_matrix_simplified_plus,
+    
+    # Form factors
+    form_factor_simplified_minus
+
 function create_available_array(N, r)
     I_max = N - r - 1
     I_min = -I_max
@@ -223,3 +261,5 @@ function form_factor_simplified_minus(z0, z, N)
 
     return exp(log_prefactor + logdet(H) + logdet(conj.(H)) - logdet(K0) - logdet(K))
 end
+
+end # module Heisenberg_XXX
