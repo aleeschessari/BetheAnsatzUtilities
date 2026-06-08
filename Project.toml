@@ -1,0 +1,7 @@
+name = "BetheAnsatzUtilities"
+uuid = "87654321-4321-8765-4321-876543218765"
+authors = ["Alessandro"]
+version = "0.1.0"
+
+[compat]
+julia = "^1.9"
