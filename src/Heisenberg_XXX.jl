@@ -1,5 +1,7 @@
 module Heisenberg_XXX
 
+using LinearAlgebra: logdet
+
 export
     # Array/initialization functions
     create_available_array,
@@ -34,7 +36,26 @@ export
     H_matrix_simplified_plus,
     
     # Form factors
-    form_factor_simplified_minus
+    form_factor_simplified_minus,
+
+    get_factor,
+    
+    affine_transformation
+
+function affine_transformation(x, range_x)
+    if x[1] > x[2]
+        i = x[1]
+        j = x[2]
+    else
+        i = x[1]
+        j = range_x+1-x[2]
+    end
+    #else
+    #     i = div(range_x,2) +1 - x[2]
+    #     j = div(range_x,2) + x[1]
+    #end
+    return [i, j]
+end
 
 function create_available_array(N, r)
     I_max = N - r - 1
@@ -54,7 +75,7 @@ function get_ground_state(N; tol=1e-12, maxiter=1000)
     I_array_available_ground = create_available_array(N, r_ground)
     z_ground = iterative_procedure(I_array_available_ground, r_ground, N, tol=tol, maxiter=maxiter)
     E_ground = energy(z_ground, N)
-    return E_ground
+    return z_ground,E_ground
 end
 
 function range_I(N, r)
@@ -76,6 +97,15 @@ function get_momentum_index_triplet(I_array_available, r, N, x)
     I_array = I_array_0[I_array_0 .!= I_array_available[x[2]]]
 
     return Int(mod(r * N / 2 - sum(I_array) - N^2 / 4, N))
+end
+
+function get_factor(I_array_available, z_ground, r, N, x; tol_z=1e-12, max_iter=1000)
+    I_array_0 = I_array_available[I_array_available .!= I_array_available[x[1]]]
+    I_array = I_array_0[I_array_0 .!= I_array_available[x[2]]]
+
+    z = iterative_procedure(I_array, r, N; tol=tol_z, maxiter=max_iter)
+
+    return (form_factor_simplified_minus(z_ground, z, N)).re
 end
 
 function energy(z, N)
